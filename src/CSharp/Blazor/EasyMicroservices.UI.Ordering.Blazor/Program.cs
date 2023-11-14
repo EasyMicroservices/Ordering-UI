@@ -1,4 +1,4 @@
-using EasyMicroservices.UI.Ordering;
+using EasyMicroservices.UI.Ordering.Blazor;
 using EasyMicroservices.UI.Ordering.ViewModels;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
