@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>EasyMicroservices.UI.Ordering</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyMicroservices.OrderingMicroservice.Clients" Version="0.0.0.4" />
+    <PackageReference Include="EasyMicroservices.UI.Core.Mvvm" Version="0.0.0.6" />
+  </ItemGroup>
+
+</Project>
