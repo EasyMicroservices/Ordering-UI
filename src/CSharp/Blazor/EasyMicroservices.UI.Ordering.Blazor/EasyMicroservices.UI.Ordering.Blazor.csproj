@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Authors>EasyMicroservices</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.0.1</Version>
+    <Version>0.0.0.2</Version>
     <Description>ordering UI compoents.</Description>
     <Copyright>EasyMicroservices@gmail.com</Copyright>
     <PackageTags>component,microcomponent,ui,core,order,ordering</PackageTags>
@@ -12,6 +12,7 @@
     <LangVersion>latest</LangVersion>
     <DocumentationFile>.\bin\$(Configuration)\$(TargetFramework)\EasyMicroservices.UI.Ordering.ViewModels.xml</DocumentationFile>
     <IsPackable>true</IsPackable>
+    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
   </PropertyGroup>
   
   <ItemGroup>
