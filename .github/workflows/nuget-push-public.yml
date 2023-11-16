@@ -28,7 +28,7 @@ jobs:
           dotnet test ./src/CSharp/Cores/EasyMicroservices.UI.Ordering.Core.sln --no-build --verbosity normal
       - name: Create the package
         run: |
-          dotnet pack ./src/CSharp/EasyMicroservices.UI.Ordering.Blazor.sln --output nupkgs
-          dotnet pack ./src/CSharp/EasyMicroservices.UI.Ordering.Core.sln --output nupkgs
+          dotnet pack ./src/CSharp/Blazor/EasyMicroservices.UI.Ordering.Blazor.sln --output nupkgs
+          dotnet pack ./src/CSharp/Cores/EasyMicroservices.UI.Ordering.Core.sln --output nupkgs
       - name: Publish the package to NuGet.org
         run: dotnet nuget push nupkgs\*.nupkg -k ${{secrets.NUGET_KEY}} -s https://api.nuget.org/v3/index.json --skip-duplicate
