@@ -3,7 +3,7 @@ using EasyMicroservices.UI.Core;
 using EasyMicroservices.UI.Core.Commands;
 using Ordering.GeneratedServices;
 
-namespace EasyMicroservices.UI.Ordering.ViewModels
+namespace EasyMicroservices.UI.Ordering.ViewModels.Orders
 {
     public class AddOrUpdateOrderViewModel : BaseViewModel
     {
@@ -34,7 +34,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels
                 if (value is not null)
                 {
                     Name = value.Name;
-                    PriceAmount = value.Price.Amount;
+                    PriceAmount = value.Prices.Select(x => x.Amount).DefaultIfEmpty(0).FirstOrDefault();
                 }
                 _UpdateOrderContract = value;
             }
@@ -76,7 +76,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels
         {
             await _orderClient.AddAsync(new CreateOrderRequestContract()
             {
-                Price = GetPrice(),
+                Prices = GetPrices(),
                 Names = GetNames(),
             }).AsCheckedResult(x => x.Result);
             Clear();
@@ -90,18 +90,21 @@ namespace EasyMicroservices.UI.Ordering.ViewModels
                 ParentId = _UpdateOrderContract.ParentId,
                 ProductId = _UpdateOrderContract.ProductId,
                 UniqueIdentity = _UpdateOrderContract.UniqueIdentity,
-                Price = GetPrice(),
+                Prices = GetPrices(),
                 Names = GetNames(),
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
 
-        PriceContract GetPrice()
+        List<OrderPriceContract> GetPrices()
         {
-            return new PriceContract()
+            return new List<OrderPriceContract>()
             {
-                Amount = PriceAmount,
-                CurrencyCode = CurrencyCodeType.IRR
+                new OrderPriceContract()
+                {
+                    Amount = PriceAmount,
+                    CurrencyCode = CurrencyCodeType.IRR
+                }
             };
         }
 

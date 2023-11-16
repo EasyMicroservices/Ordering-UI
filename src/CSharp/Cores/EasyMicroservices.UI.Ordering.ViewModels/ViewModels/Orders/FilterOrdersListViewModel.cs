@@ -3,10 +3,9 @@ using EasyMicroservices.UI.Core;
 using EasyMicroservices.UI.Core.Commands;
 using Ordering.GeneratedServices;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Contracts;
 using System.Windows.Input;
 
-namespace EasyMicroservices.UI.Ordering.ViewModels
+namespace EasyMicroservices.UI.Ordering.ViewModels.Orders
 {
     public class FilterOrdersListViewModel : BaseViewModel
     {
@@ -27,7 +26,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels
         OrderContract _SelectedOrderContract;
         public OrderContract SelectedOrderContract
         {
-            get =>_SelectedOrderContract;
+            get => _SelectedOrderContract;
             set
             {
                 _SelectedOrderContract = value;
@@ -58,7 +57,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels
             {
                 Id = contract.Id,
                 IsDelete = true
-            }).AsCheckedResult(x => x);
+            }).AsCheckedResult(x=>x);
             Orders.Remove(contract);
             OnDelete?.Invoke(contract);
         }

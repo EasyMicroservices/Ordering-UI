@@ -1,13 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
+  
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <Authors>EasyMicroservices</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.0.1</Version>
+    <Description>ordering view model.</Description>
+    <Copyright>EasyMicroservices@gmail.com</Copyright>
+    <PackageTags>mvvm,viewmodel,viewmodels,modelviewviewmodel,ui,core,order,ordering</PackageTags>
+    <PackageProjectUrl>https://github.com/EasyMicroservices/Ordering-UI</PackageProjectUrl>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>.\bin\$(Configuration)\$(TargetFramework)\EasyMicroservices.UI.Ordering.ViewModels.xml</DocumentationFile>
     <RootNamespace>EasyMicroservices.UI.Ordering</RootNamespace>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyMicroservices.OrderingMicroservice.Clients" Version="0.0.0.4" />
+    <PackageReference Include="EasyMicroservices.OrderingMicroservice.Clients" Version="0.0.0.5" />
     <PackageReference Include="EasyMicroservices.UI.Core.Mvvm" Version="0.0.0.6" />
   </ItemGroup>
 
