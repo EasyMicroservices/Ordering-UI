@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/EasyMicroservices/Ordering-UI</PackageProjectUrl>
     <LangVersion>latest</LangVersion>
     <DocumentationFile>.\bin\$(Configuration)\$(TargetFramework)\EasyMicroservices.UI.Ordering.ViewModels.xml</DocumentationFile>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
   
   <ItemGroup>
