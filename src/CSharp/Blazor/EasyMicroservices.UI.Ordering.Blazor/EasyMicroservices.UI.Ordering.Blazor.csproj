@@ -1,24 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-  
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Authors>EasyMicroservices</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.0.4</Version>
+    <Version>0.0.0.5</Version>
     <Description>ordering UI compoents.</Description>
     <Copyright>EasyMicroservices@gmail.com</Copyright>
     <PackageTags>component,microcomponent,ui,core,order,ordering</PackageTags>
     <PackageProjectUrl>https://github.com/EasyMicroservices/Ordering-UI</PackageProjectUrl>
     <LangVersion>latest</LangVersion>
-    <DocumentationFile>.\bin\$(Configuration)\$(TargetFramework)\EasyMicroservices.UI.Ordering.ViewModels.xml</DocumentationFile>
+    <DocumentationFile>.\bin\$(Configuration)\$(TargetFramework)\EasyMicroservices.UI.Ordering.Blazor.TestUI.xml</DocumentationFile>
     <IsPackable>true</IsPackable>
-    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <Content Remove="wwwroot\index.html" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="6.11.0" />
   </ItemGroup>
@@ -31,14 +27,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.13" PrivateAssets="all" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.25" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.25" PrivateAssets="all" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="wwwroot\index.html" />
-  </ItemGroup>
-  
+
 </Project>
