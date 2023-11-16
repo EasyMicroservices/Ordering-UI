@@ -1,10 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
+  
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <Authors>EasyMicroservices</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.0.1</Version>
+    <Description>ordering UI compoents.</Description>
+    <Copyright>EasyMicroservices@gmail.com</Copyright>
+    <PackageTags>component,microcomponent,ui,core,order,ordering</PackageTags>
+    <PackageProjectUrl>https://github.com/EasyMicroservices/Ordering-UI</PackageProjectUrl>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>.\bin\$(Configuration)\$(TargetFramework)\EasyMicroservices.UI.Ordering.ViewModels.xml</DocumentationFile>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.13" PrivateAssets="all" />

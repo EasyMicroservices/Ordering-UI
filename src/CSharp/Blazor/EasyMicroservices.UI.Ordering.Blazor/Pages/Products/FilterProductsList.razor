@@ -1,17 +1,20 @@
-﻿@page "/FilterOrdersList"
-@using global::Ordering.GeneratedServices;
-@inject FilterOrdersListViewModel viewModel;
+﻿@page "/FilterProductsList"
+@inject FilterProductsListViewModel viewModel;
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<MudDataGrid T="OrderContract" MultiSelection="true" Items="viewModel.Orders" SortMode="SortMode.Multiple" Filterable="true"
+<MudDataGrid T="ProductContract" MultiSelection="true" Items="viewModel.Products" SortMode="SortMode.Multiple" Filterable="true"
              Hideable="true">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+        <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="5">
+            <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="(arg) => ShowAddDialog()" />
+            <MudText Typo="Typo.h6" mar>Products</MudText>
+        </MudStack>
+        
         <MudSpacer />
         <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SearchCommand.Execute(null)" >
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Primary" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SearchCommand.Execute(null)">
             @if (viewModel.IsBusy)
             {
                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -24,42 +27,42 @@
         </MudButton>
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="OrderContract" />
-        <PropertyColumn Property="x => x.Id"/>
+        <SelectColumn T="ProductContract" />
+        <PropertyColumn Property="x => x.Id" />
         <PropertyColumn Property="x => x.Name" />
-        <PropertyColumn Property="x => x.Price.Amount" />
+        <PropertyColumn Property="x => x.Prices.Select(x => x.Amount).DefaultIfEmpty(0).FirstOrDefault()" />
         @* <PropertyColumn Property="x => x.Product.Name" Title="Product Name" /> *@
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="(arg) => OnEdit(context.Item)" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="(arg) => ShowUpdateDialog(context.Item)" />
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="(arg) => ShowDeleteDialog(context.Item)" />
             </CellTemplate>
         </TemplateColumn>
     </Columns>
     <PagerContent>
-        <MudDataGridPager T="OrderContract" />
+        <MudDataGridPager T="ProductContract" />
     </PagerContent>
 </MudDataGrid>
 <MudDialog Class="@DialogClass" @bind-IsVisible="IsShowEditDialog" Options="DialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Edit Order
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> @_AddOrUpdateTitle
         </MudText>
     </TitleContent>
     <DialogContent>
-        <AddOrUpdateOrder @ref="addOrUpdateOrderView" />
+        <AddOrUpdateProduct @ref="addOrUpdateProductView" />
     </DialogContent>
 </MudDialog>
 <MudDialog Class="@DialogClass" @ref="deleteDialog" @bind-IsVisible="IsShowDeleteDialog">
     <TitleContent>
         <MudText>
-            Delete Order
+            Delete Product
         </MudText>
     </TitleContent>
     <DialogContent>
         Do you really want to delete these records? This process cannot be undone.
     </DialogContent>
-    <DialogActions >
+    <DialogActions>
         @if (!viewModel.IsBusy)
         {
             <MudButton OnClick="() => deleteDialog.Close()">Cancel</MudButton>
@@ -83,7 +86,7 @@
     }
 </style>
 @code {
-    AddOrUpdateOrder addOrUpdateOrderView;
+    AddOrUpdateProduct addOrUpdateProductView;
     MudDialog deleteDialog;
     DialogOptions DialogOptions = new DialogOptions()
         {
@@ -93,6 +96,8 @@
         };
     string DialogClass = "invisible";
     private string _searchString;
+    private string _AddOrUpdateTitle;
+    private string _AddOrUpdatedMessage;
 
     bool IsShowEditDialog = true;
     bool IsShowDeleteDialog = true;
@@ -110,21 +115,35 @@
         return base.OnAfterRenderAsync(firstRender);
     }
 
-    void OnEdit(OrderContract orderContract)
+    void ShowUpdateDialog(ProductContract productContract)
     {
-        addOrUpdateOrderView.ViewModel.UpdateOrderContract = orderContract;
-        addOrUpdateOrderView.ViewModel.OnSuccess = () =>
+        _AddOrUpdateTitle = "Update Product";
+        _AddOrUpdatedMessage = "Product updated.";
+        addOrUpdateProductView.ViewModel.UpdateProductContract = productContract;
+        ShowAddOrUpdateDialog();
+    }
+
+    void ShowAddDialog()
+    {
+        _AddOrUpdateTitle = "Add Product";
+        _AddOrUpdatedMessage = "Product added.";
+        ShowAddOrUpdateDialog();
+    }
+
+    void ShowAddOrUpdateDialog()
+    {
+        addOrUpdateProductView.ViewModel.OnSuccess = () =>
         {
             IsShowEditDialog = false;
-            StateHasChanged();
-            Snackbar.Add("Order updated.", Severity.Success);
+            viewModel.SearchCommand.Execute(null);
+            Snackbar.Add(_AddOrUpdatedMessage, Severity.Success);
         };
         IsShowEditDialog = true;
     }
 
-    void ShowDeleteDialog(OrderContract orderContract)
+    void ShowDeleteDialog(ProductContract productContract)
     {
-        viewModel.SelectedOrderContract = orderContract;
+        viewModel.SelectedProductContract = productContract;
         IsShowDeleteDialog = true;
     }
 
@@ -135,12 +154,12 @@
         {
             IsShowDeleteDialog = false;
             StateHasChanged();
-            Snackbar.Add("Order deleted!", Severity.Success);
+            Snackbar.Add("Product deleted!", Severity.Success);
         };
-        viewModel.DeleteCommand.Execute(viewModel.SelectedOrderContract);
+        viewModel.DeleteCommand.Execute(viewModel.SelectedProductContract);
     }
 
-    void CloseDeleteDialog(OrderContract orderContract)
+    void CloseDeleteDialog(ProductContract productContract)
     {
         deleteDialog.Close();
     }
