@@ -1,6 +1,7 @@
 ﻿using EasyMicroservices.ServiceContracts;
-using EasyMicroservices.UI.Core;
-using EasyMicroservices.UI.Core.Commands;
+using EasyMicroservices.UI.Cores;
+using EasyMicroservices.UI.Cores.Commands;
+using EasyMicroservices.UI.Cores.Interfaces;
 using Ordering.GeneratedServices;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -17,8 +18,8 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             SearchCommand.Execute(null);
         }
 
-        public ICommand SearchCommand { get; set; }
-        public ICommand DeleteCommand { get; set; }
+        public ICommandAsync SearchCommand { get; set; }
+        public ICommandAsync DeleteCommand { get; set; }
 
         public Action<ProductContract> OnDelete { get; set; }
         readonly ProductClient _productClient;
@@ -32,18 +33,25 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
                 OnPropertyChanged(nameof(SelectedProductContract));
             }
         }
-
+        
+        public int Index { get; set; } = 0;
+        public int Length { get; set; } = 10;
+        public int TotalCount { get; set; }
+        public string SortColumnNames { get; set; }
         public ObservableCollection<ProductContract> Products { get; set; } = new ObservableCollection<ProductContract>();
 
         private async Task Search()
         {
             var filteredResult = await _productClient.FilterAsync(new FilterRequestContract()
             {
-                IsDeleted = false
+                IsDeleted = false,
+                Index = Index,
+                Length = Length,
+                SortColumnNames = SortColumnNames
             }).AsCheckedResult(x => (x.Result, x.TotalCount));
 
             Products.Clear();
-
+            TotalCount = (int)filteredResult.TotalCount;
             foreach (var product in filteredResult.Result)
             {
                 Products.Add(product);

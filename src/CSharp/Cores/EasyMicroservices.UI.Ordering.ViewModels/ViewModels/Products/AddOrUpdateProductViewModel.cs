@@ -1,6 +1,6 @@
 ﻿using EasyMicroservices.ServiceContracts;
-using EasyMicroservices.UI.Core;
-using EasyMicroservices.UI.Core.Commands;
+using EasyMicroservices.UI.Cores;
+using EasyMicroservices.UI.Cores.Commands;
 using Ordering.GeneratedServices;
 
 namespace EasyMicroservices.UI.Ordering.ViewModels.Products
