@@ -6,7 +6,7 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<MudDataGrid T="ProductContract" MultiSelection="true" Items="viewModel.Products" SortMode="SortMode.Multiple" Filterable="true"
+<MudDataGrid T="ProductContract" ServerData="LoadGridData" MultiSelection="true" OverscanCount="viewModel.TotalCount" Items="viewModel.Products" SortMode="SortMode.Multiple" Filterable="true"
              Hideable="true">
     <ToolBarContent>
         <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="5">
@@ -108,6 +108,20 @@
     {
         viewModel.BindPropertyChanged(StateHasChanged);
         return base.OnInitializedAsync();
+    }
+
+    private async Task<GridData<ProductContract>> LoadGridData(GridState<ProductContract> state)
+    {
+        viewModel.Index = state.Page * 10;
+        viewModel.Length = state.PageSize;
+        await viewModel.SearchCommand.ExecuteAsync(null);
+        GridData<ProductContract> data = new()
+            {
+                Items = viewModel.Products,
+                TotalItems = viewModel.TotalCount
+            };
+
+        return data;
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
