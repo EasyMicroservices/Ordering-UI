@@ -92,6 +92,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             {
                 Prices = GetPrices(),
                 Names = GetNames(),
+                CountingUnitType = CountingUnitType,
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
@@ -108,13 +109,12 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
 
         public async Task UpdateProduct()
         {
-            await _productClient.UpdateAsync(new UpdateProductRequestContract()
+            await _productClient.UpdateChangedValuesOnlyAsync(new UpdateProductRequestContract()
             {
-                Id = GetCurrentProperty(x => x.Id),
-                ParentId = GetCurrentProperty(x => x.ParentId),
-                UniqueIdentity = GetCurrentProperty(x => x.UniqueIdentity),
+                Id = UpdateProductContract.Id,
                 Prices = GetPrices(),
                 Names = GetNames(),
+                CountingUnitType = CountingUnitType,
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
@@ -158,6 +158,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             Name = "";
             PriceAmount = 0;
             UpdateProductContract = default;
+            CountingUnitType = CountingUnitType.Number;
         }
     }
 }
