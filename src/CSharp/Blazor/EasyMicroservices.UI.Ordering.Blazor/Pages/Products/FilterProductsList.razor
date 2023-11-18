@@ -53,7 +53,7 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <AddOrUpdateProduct @ref="addOrUpdateProductView" />
+        <AddOrUpdateProduct @ref="AddOrUpdateProductView" />
     </DialogContent>
 </MudDialog>
 <MudDialog Class="@DialogClass" @ref="deleteDialog" @bind-IsVisible="IsShowDeleteDialog">
@@ -89,7 +89,7 @@
     }
 </style>
 @code {
-    AddOrUpdateProduct addOrUpdateProductView;
+    AddOrUpdateProduct AddOrUpdateProductView { get; set; }
     MudDialog deleteDialog;
     DialogOptions DialogOptions = new DialogOptions()
         {
@@ -104,10 +104,10 @@
 
     bool IsShowEditDialog = true;
     bool IsShowDeleteDialog = true;
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         viewModel.BindPropertyChanged(StateHasChanged);
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
     private async Task<GridData<ProductContract>> LoadGridData(GridState<ProductContract> state)
@@ -136,7 +136,7 @@
     {
         _AddOrUpdateTitle = "Update Product";
         _AddOrUpdatedMessage = "Product updated.";
-        addOrUpdateProductView.ViewModel.UpdateProductContract = productContract;
+        AddOrUpdateProductView.ViewModel.UpdateProductContract = productContract;
         ShowAddOrUpdateDialog();
     }
 
@@ -144,13 +144,13 @@
     {
         _AddOrUpdateTitle = "Add Product";
         _AddOrUpdatedMessage = "Product added.";
-        addOrUpdateProductView.ViewModel.Clear();
+        AddOrUpdateProductView.ViewModel.Clear();
         ShowAddOrUpdateDialog();
     }
 
     void ShowAddOrUpdateDialog()
     {
-        addOrUpdateProductView.ViewModel.OnSuccess = () =>
+        AddOrUpdateProductView.ViewModel.OnSuccess = () =>
         {
             IsShowEditDialog = false;
             viewModel.SearchCommand.Execute(null);

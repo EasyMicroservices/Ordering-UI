@@ -13,7 +13,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             _countingUnitClient = countingUnitClient;
             SaveCommand = new TaskRelayCommand(this, Save);
             Clear();
-            _ = Load();
         }
 
         public TaskRelayCommand SaveCommand { get; set; }
@@ -156,7 +155,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             };
         }
 
-        async Task Load()
+        public async Task LoadConfig()
         {
             var items = await _countingUnitClient.GetAllByLanguageAsync(new GetByLanguageRequestContract()
             {
@@ -170,6 +169,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             Name = "";
             PriceAmount = 0;
             UpdateProductContract = default;
+            CountingUnits = null;
         }
     }
 }
