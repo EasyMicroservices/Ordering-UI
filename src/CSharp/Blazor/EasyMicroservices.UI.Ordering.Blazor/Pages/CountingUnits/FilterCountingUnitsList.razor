@@ -1,0 +1,182 @@
+﻿@page "/FilterCountingUnitsList"
+@using EasyMicroservices.UI.Ordering.ViewModels.CountingUnits;
+@using MudBlazor;
+@using global::Ordering.GeneratedServices;
+@inject FilterCountingUnitsListViewModel viewModel;
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudDataGrid T="CountingUnitContract" ServerData="LoadGridData" MultiSelection="true" OverscanCount="viewModel.TotalCount" Items="viewModel.CountingUnits" SortMode="SortMode.Multiple" Filterable="true"
+             Hideable="true">
+    <ToolBarContent>
+        <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="5">
+            <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="(arg) => ShowAddDialog()" />
+            <MudText Typo="Typo.h6" mar>CountingUnits</MudText>
+        </MudStack>
+        
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Primary" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SearchCommand.Execute(null)">
+            @if (viewModel.IsBusy)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Processing</MudText>
+            }
+            else
+            {
+                <MudText>Search</MudText>
+            }
+        </MudButton>
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="CountingUnitContract" />
+        <PropertyColumn Property="x => x.Id" />
+        <PropertyColumn Property="x => x.Name" />
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="(arg) => ShowUpdateDialog(context.Item)" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="(arg) => ShowDeleteDialog(context.Item)" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="CountingUnitContract" />
+    </PagerContent>
+</MudDataGrid>
+<MudDialog Class="@DialogClass" @bind-IsVisible="IsShowEditDialog" Options="DialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> @_AddOrUpdateTitle
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <AddOrUpdateCountingUnit @ref="addOrUpdateCountingUnitView" />
+    </DialogContent>
+</MudDialog>
+<MudDialog Class="@DialogClass" @ref="deleteDialog" @bind-IsVisible="IsShowDeleteDialog">
+    <TitleContent>
+        <MudText>
+            Delete CountingUnit
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        Do you really want to delete these records? This process cannot be undone.
+    </DialogContent>
+    <DialogActions>
+        @if (!viewModel.IsBusy)
+        {
+            <MudButton OnClick="() => deleteDialog.Close()">Cancel</MudButton>
+        }
+        <MudButton Color="Color.Error" Variant="Variant.Filled" Disabled="viewModel.IsBusy" OnClick="()=>DoDelete()">
+            @if (viewModel.IsBusy)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">Deleting</MudText>
+            }
+            else
+            {
+                <MudText>Delete</MudText>
+            }
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+<style>
+    .dialog-background-class {
+        backdrop-filter: blur(10px);
+    }
+</style>
+@code {
+    AddOrUpdateCountingUnit addOrUpdateCountingUnitView;
+    MudDialog deleteDialog;
+    DialogOptions DialogOptions = new DialogOptions()
+        {
+            ClassBackground = "dialog-background-class",
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.ExtraSmall
+        };
+    string DialogClass = "invisible";
+    private string _searchString;
+    private string _AddOrUpdateTitle;
+    private string _AddOrUpdatedMessage;
+
+    bool IsShowEditDialog = true;
+    bool IsShowDeleteDialog = true;
+    protected override Task OnInitializedAsync()
+    {
+        viewModel.BindPropertyChanged(StateHasChanged);
+        return base.OnInitializedAsync();
+    }
+
+    private async Task<GridData<CountingUnitContract>> LoadGridData(GridState<CountingUnitContract> state)
+    {
+        viewModel.Index = state.Page * 10;
+        viewModel.Length = state.PageSize;
+        await viewModel.SearchCommand.ExecuteAsync(null);
+        GridData<CountingUnitContract> data = new()
+            {
+                Items = viewModel.CountingUnits,
+                TotalItems = viewModel.TotalCount
+            };
+
+        return data;
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        IsShowEditDialog = false;
+        IsShowDeleteDialog = false;
+        DialogClass = "visible";
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    void ShowUpdateDialog(CountingUnitContract countingUnitContract)
+    {
+        _AddOrUpdateTitle = "Update CountingUnit";
+        _AddOrUpdatedMessage = "CountingUnit updated.";
+        addOrUpdateCountingUnitView.ViewModel.UpdateCountingUnitContract = countingUnitContract;
+        ShowAddOrUpdateDialog();
+    }
+
+    void ShowAddDialog()
+    {
+        _AddOrUpdateTitle = "Add CountingUnit";
+        _AddOrUpdatedMessage = "CountingUnit added.";
+        addOrUpdateCountingUnitView.ViewModel.Clear();
+        ShowAddOrUpdateDialog();
+    }
+
+    void ShowAddOrUpdateDialog()
+    {
+        addOrUpdateCountingUnitView.ViewModel.OnSuccess = () =>
+        {
+            IsShowEditDialog = false;
+            viewModel.SearchCommand.Execute(null);
+            Snackbar.Add(_AddOrUpdatedMessage, Severity.Success);
+        };
+        IsShowEditDialog = true;
+    }
+
+    void ShowDeleteDialog(CountingUnitContract countingUnitContract)
+    {
+        viewModel.SelectedCountingUnitContract = countingUnitContract;
+        IsShowDeleteDialog = true;
+    }
+
+    void DoDelete()
+    {
+        IsShowDeleteDialog = true;
+        viewModel.OnDelete = (o) =>
+        {
+            IsShowDeleteDialog = false;
+            StateHasChanged();
+            Snackbar.Add("CountingUnit deleted!", Severity.Success);
+        };
+        viewModel.DeleteCommand.Execute(viewModel.SelectedCountingUnitContract);
+    }
+
+    void CloseDeleteDialog(CountingUnitContract countingUnitContract)
+    {
+        deleteDialog.Close();
+    }
+}

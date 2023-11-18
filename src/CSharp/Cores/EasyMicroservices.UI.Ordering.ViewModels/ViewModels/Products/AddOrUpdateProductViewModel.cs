@@ -7,16 +7,19 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
 {
     public class AddOrUpdateProductViewModel : BaseViewModel
     {
-        public AddOrUpdateProductViewModel(ProductClient productClient)
+        public AddOrUpdateProductViewModel(ProductClient productClient, CountingUnitClient countingUnitClient)
         {
             _productClient = productClient;
+            _countingUnitClient = countingUnitClient;
             SaveCommand = new TaskRelayCommand(this, Save);
             Clear();
+            _ = Load();
         }
 
         public TaskRelayCommand SaveCommand { get; set; }
 
         readonly ProductClient _productClient;
+        readonly CountingUnitClient _countingUnitClient;
 
         public Action OnSuccess { get; set; }
         ProductContract _UpdateProductContract;
@@ -35,6 +38,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
                 {
                     Name = value.Name;
                     PriceAmount = value.Prices.Select(x => x.Amount).DefaultIfEmpty(0).FirstOrDefault();
+                    SelectedCountingUnitId = value.CountingUnitId.GetValueOrDefault();
                 }
                 _UpdateProductContract = value;
             }
@@ -63,19 +67,18 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             }
         }
 
-
-        CountingUnitType _CountingUnitType = CountingUnitType.Number;
-        public CountingUnitType CountingUnitType
+        ICollection<CountingUnitContract> _CountingUnits;
+        public ICollection<CountingUnitContract> CountingUnits
         {
-            get
-            {
-                return _CountingUnitType;
-            }
+            get => _CountingUnits;
             set
             {
-                _CountingUnitType = value;
+                _CountingUnits = value;
+                OnPropertyChanged(nameof(CountingUnits));
             }
         }
+
+        public long SelectedCountingUnitId { get; set; }
 
         public async Task Save()
         {
@@ -92,7 +95,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             {
                 Prices = GetPrices(),
                 Names = GetNames(),
-                CountingUnitType = CountingUnitType,
+                CountingUnitId = SelectedCountingUnitId
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
@@ -114,7 +117,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
                 Id = UpdateProductContract.Id,
                 Prices = GetPrices(),
                 Names = GetNames(),
-                CountingUnitType = CountingUnitType,
+                CountingUnitId = SelectedCountingUnitId
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
@@ -153,12 +156,20 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             };
         }
 
+        async Task Load()
+        {
+            var items = await _countingUnitClient.GetAllByLanguageAsync(new GetByLanguageRequestContract()
+            {
+                Language = "fa-IR"
+            }).AsCheckedResult(x=>x.Result);
+            CountingUnits = items;
+        }
+
         public void Clear()
         {
             Name = "";
             PriceAmount = 0;
             UpdateProductContract = default;
-            CountingUnitType = CountingUnitType.Number;
         }
     }
 }

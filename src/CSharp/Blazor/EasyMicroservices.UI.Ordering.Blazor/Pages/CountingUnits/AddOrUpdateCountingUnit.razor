@@ -1,23 +1,13 @@
-﻿@page "/AddOrUpdateProduct"
-@using EasyMicroservices.UI.Ordering.ViewModels.Products;
+﻿@page "/AddOrUpdateCountingUnit"
+@using EasyMicroservices.UI.Ordering.ViewModels.CountingUnits;
 @using MudBlazor
 @using global::Ordering.GeneratedServices;
-@inject AddOrUpdateProductViewModel viewModel;
+@inject AddOrUpdateCountingUnitViewModel viewModel;
 
 <MudStack>
     <MudPaper Class="pa-4">
         <MudStack Spacing="4">
             <MudTextField @bind-Value="viewModel.Name" Label="Name" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="viewModel.PriceAmount" Label="Value Added Tax" Variant="Variant.Text"></MudTextField>
-            @if (viewModel.CountingUnits is not null)
-            {
-                <MudSelect T="long" @bind-Value="viewModel.SelectedCountingUnitId" Label="Counting Unit Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                    @foreach (var item in viewModel.CountingUnits)
-                    {
-                        <MudSelectItem Value="@item.Id">@item.Name</MudSelectItem>
-                    }
-                </MudSelect>
-            }
         </MudStack>
     </MudPaper>
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SaveCommand.Execute(null)">
@@ -34,14 +24,14 @@
 </MudStack>
 
 @code {
-    public AddOrUpdateProductViewModel ViewModel
+    public AddOrUpdateCountingUnitViewModel ViewModel
     {
         get
         {
             return viewModel;
         }
     }
-
+    CountingUnitType CountingUnitType = CountingUnitType.Number;
     protected override Task OnInitializedAsync()
     {
         viewModel.BindPropertyChanged(StateHasChanged);
