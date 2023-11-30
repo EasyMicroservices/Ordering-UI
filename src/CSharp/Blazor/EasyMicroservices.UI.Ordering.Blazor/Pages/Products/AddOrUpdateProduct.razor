@@ -9,6 +9,14 @@
         <MudStack Spacing="4">
             <MudTextField @bind-Value="viewModel.Name" Label="Name" Variant="Variant.Text"></MudTextField>
             <MudTextField @bind-Value="viewModel.PriceAmount" Label="Value Added Tax" Variant="Variant.Text"></MudTextField>
+            <MudSelect @bind-Value="viewModel.AmountType" Label="Amount Type" OpenIcon="@Icons.Material.Filled.LocalDrink" AdornmentColor="Color.Secondary">
+                @foreach (AmountType item in Enum.GetValues<AmountType>())
+                {
+                    if ((int)item < 6)
+                        continue;
+                    <MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
+                }
+            </MudSelect>
             @if (viewModel.CountingUnits is not null)
             {
                 <MudSelect T="long" @bind-Value="viewModel.SelectedCountingUnitId" Label="Counting Unit Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">

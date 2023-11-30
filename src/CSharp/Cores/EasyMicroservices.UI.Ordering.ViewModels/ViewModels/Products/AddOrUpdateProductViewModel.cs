@@ -66,6 +66,17 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             }
         }
 
+        AmountType _AmountType = AmountType.Percent;
+        public AmountType AmountType
+        {
+            get => _AmountType;
+            set
+            {
+                _AmountType = value;
+                OnPropertyChanged(nameof(AmountType));
+            }
+        }
+
         ICollection<CountingUnitContract> _CountingUnits;
         public ICollection<CountingUnitContract> CountingUnits
         {
@@ -132,7 +143,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
                     UniqueIdentity = GetCurrentProperty(x => x.Prices.Select(x=> x.UniqueIdentity).DefaultIfEmpty(null).FirstOrDefault()),
                     Amount = PriceAmount,
                     CurrencyCode = CurrencyCodeType.IRR,
-                    AmountType = AmountType.Decimal,
+                    AmountType = AmountType,
                     Type = PriceType.ValueAddedTax
                 }
             };
@@ -160,7 +171,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             var items = await _countingUnitClient.GetAllByLanguageAsync(new GetByLanguageRequestContract()
             {
                 Language = "fa-IR"
-            }).AsCheckedResult(x=>x.Result);
+            }).AsCheckedResult(x => x.Result);
             CountingUnits = items;
         }
 
@@ -168,6 +179,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
         {
             Name = "";
             PriceAmount = 0;
+            AmountType = AmountType.Percent;
             UpdateProductContract = default;
             CountingUnits = null;
         }
