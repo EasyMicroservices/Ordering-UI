@@ -18,8 +18,8 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             SearchCommand.Execute(null);
         }
 
-        public ICommandAsync SearchCommand { get; set; }
-        public ICommandAsync DeleteCommand { get; set; }
+        public IAsyncCommand SearchCommand { get; set; }
+        public IAsyncCommand DeleteCommand { get; set; }
 
         public Action<ProductContract> OnDelete { get; set; }
         readonly ProductClient _productClient;

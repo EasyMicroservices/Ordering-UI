@@ -1,27 +1,33 @@
 ﻿@page "/AddOrUpdateCountingUnit"
+
+@using EasyMicroservices.UI.Cores
 @using EasyMicroservices.UI.Ordering.ViewModels.CountingUnits;
 @using MudBlazor
 @using global::Ordering.GeneratedServices;
+
 @inject AddOrUpdateCountingUnitViewModel viewModel;
 
-<MudStack>
-    <MudPaper Class="pa-4">
-        <MudStack Spacing="4">
-            <MudTextField @bind-Value="viewModel.Name" Label="Name" Variant="Variant.Text"></MudTextField>
-        </MudStack>
-    </MudPaper>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SaveCommand.Execute(null)">
-        @if (viewModel.IsBusy)
-        {
-            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-            <MudText Class="ms-2">Saving</MudText>
-        }
-        else
-        {
-            <MudText>Save</MudText>
-        }
-    </MudButton>
-</MudStack>
+<MudRTLProvider RightToLeft="BaseViewModel.IsRightToLeft">
+    <MudStack>
+        <MudPaper Class="pa-4">
+            <MudStack Spacing="4">
+                <MudTextField @bind-Value="viewModel.Name" Label="@viewModel.GetLanguage("Name")" Variant="Variant.Text"></MudTextField>
+            </MudStack>
+        </MudPaper>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SaveCommand.Execute(null)">
+            @if (viewModel.IsBusy)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">@viewModel.GetLanguage("Saving")</MudText>
+            }
+            else
+            {
+                <MudText>@viewModel.GetLanguage("Save")</MudText>
+            }
+        </MudButton>
+    </MudStack>
+</MudRTLProvider>
+
 
 @code {
     public AddOrUpdateCountingUnitViewModel ViewModel

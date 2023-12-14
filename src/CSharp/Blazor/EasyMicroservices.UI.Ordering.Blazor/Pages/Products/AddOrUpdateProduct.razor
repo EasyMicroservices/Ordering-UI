@@ -1,45 +1,51 @@
 ﻿@page "/AddOrUpdateProduct"
+@using EasyMicroservices.UI.Cores
 @using EasyMicroservices.UI.Ordering.ViewModels.Products;
 @using MudBlazor
 @using global::Ordering.GeneratedServices;
 @inject AddOrUpdateProductViewModel viewModel;
 
-<MudStack>
-    <MudPaper Class="pa-4">
-        <MudStack Spacing="4">
-            <MudTextField @bind-Value="viewModel.Name" Label="Name" Variant="Variant.Text"></MudTextField>
-            <MudTextField @bind-Value="viewModel.PriceAmount" Label="Value Added Tax" Variant="Variant.Text"></MudTextField>
-            <MudSelect @bind-Value="viewModel.AmountType" Label="Amount Type" OpenIcon="@Icons.Material.Filled.LocalDrink" AdornmentColor="Color.Secondary">
-                @foreach (AmountType item in Enum.GetValues<AmountType>())
-                {
-                    if ((int)item < 6)
-                        continue;
-                    <MudSelectItem Value="@item">@item.ToString()</MudSelectItem>
-                }
-            </MudSelect>
-            @if (viewModel.CountingUnits is not null)
-            {
-                <MudSelect T="long" @bind-Value="viewModel.SelectedCountingUnitId" Label="Counting Unit Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
-                    @foreach (var item in viewModel.CountingUnits)
+<MudRTLProvider RightToLeft="BaseViewModel.IsRightToLeft">
+    <MudStack>
+        <MudPaper Class="pa-4">
+            <MudStack Spacing="4">
+                
+                <MudTextField @bind-Value="viewModel.Name" Label="@viewModel.GetLanguage("Name")" Variant="Variant.Text"></MudTextField>
+                <MudTextField @bind-Value="viewModel.PriceAmount" Label="@viewModel.GetLanguage("Ordering_ValueAddedTax_Title")" Variant="Variant.Text"></MudTextField>
+                <MudTextField @bind-Value="viewModel.ExternalServiceIdentifier" Label="@viewModel.GetLanguage("Ordering_ExternalServiceIdentifier_Title")" Variant="Variant.Text"></MudTextField>
+                <MudSelect @bind-Value="viewModel.AmountType" Label="@viewModel.GetLanguage("Ordering_AmountType_Title")" OpenIcon="@Icons.Material.Filled.LocalDrink" AdornmentColor="Color.Secondary">
+                    @foreach (AmountType item in Enum.GetValues<AmountType>())
                     {
-                        <MudSelectItem Value="@item.Id">@item.Name</MudSelectItem>
+                        if ((int)item < 6)
+                            continue;
+                        <MudSelectItem Value="@item">@viewModel.GetLanguage($"Ordering_{item.ToString()}_Title")</MudSelectItem>
                     }
                 </MudSelect>
+                @if (viewModel.CountingUnits is not null)
+                {
+                    <MudSelect T="long" @bind-Value="viewModel.SelectedCountingUnitId" Label="@viewModel.GetLanguage("Ordering_CountingUnitType_Title")" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+                        @foreach (var item in viewModel.CountingUnits)
+                        {
+                            <MudSelectItem Value="@item.Id">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudStack>
+        </MudPaper>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SaveCommand.Execute(null)">
+            @if (viewModel.IsBusy)
+            {
+                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                <MudText Class="ms-2">@viewModel.GetLanguage("Saving")</MudText>
             }
-        </MudStack>
-    </MudPaper>
-    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SaveCommand.Execute(null)">
-        @if (viewModel.IsBusy)
-        {
-            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-            <MudText Class="ms-2">Saving</MudText>
-        }
-        else
-        {
-            <MudText>Save</MudText>
-        }
-    </MudButton>
-</MudStack>
+            else
+            {
+                <MudText>@viewModel.GetLanguage("Save")</MudText>
+            }
+        </MudButton>
+    </MudStack>
+</MudRTLProvider>
+
 
 @code {
     public AddOrUpdateProductViewModel ViewModel

@@ -2,5 +2,17 @@
 @using EasyMicroservices.UI.Ordering.Blazor.Pages.Products;
 @using EasyMicroservices.UI.Ordering.Blazor.Pages.CountingUnits;
 
-<FilterProductsList></FilterProductsList>
-@* <FilterCountingUnitsList></FilterCountingUnitsList> *@
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Add or Update Products">
+        <AddOrUpdateProduct></AddOrUpdateProduct>
+    </MudTabPanel> 
+    <MudTabPanel Text="Filter Products">
+        <FilterProductsList></FilterProductsList>
+    </MudTabPanel>
+    <MudTabPanel Text="Add or Update CountingUnits">
+        <AddOrUpdateCountingUnit></AddOrUpdateCountingUnit>
+    </MudTabPanel>
+    <MudTabPanel Text="Filter Counting Units">
+        <FilterCountingUnitsList></FilterCountingUnitsList>
+    </MudTabPanel>
+</MudTabs>

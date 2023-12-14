@@ -1,4 +1,5 @@
 ﻿@page "/FilterOrdersList"
+@using EasyMicroservices.UI.Cores
 @using EasyMicroservices.UI.Ordering.ViewModels.Orders;
 @using MudBlazor
 @using global::Ordering.GeneratedServices;
@@ -6,79 +7,81 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<MudDataGrid T="OrderContract" MultiSelection="true" Items="viewModel.Orders" SortMode="SortMode.Multiple" Filterable="true"
-             Hideable="true">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Periodic Elements</MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SearchCommand.Execute(null)" >
-            @if (viewModel.IsBusy)
+<MudRTLProvider RightToLeft="BaseViewModel.IsRightToLeft">
+    <MudDataGrid T="OrderContract" MultiSelection="true" Items="viewModel.Orders" SortMode="SortMode.Multiple" Filterable="true"
+                 Hideable="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">@viewModel.GetLanguage("Orders")</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="@viewModel.GetLanguage("Search")" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SearchCommand.Execute(null)">
+                    @if (viewModel.IsBusy)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">@viewModel.GetLanguage("Processing")</MudText>
+                }
+                else
+                {
+                    <MudText>@viewModel.GetLanguage("Search")</MudText>
+                }
+            </MudButton>
+        </ToolBarContent>
+        <Columns>
+            <SelectColumn T="OrderContract" />
+            <PropertyColumn Property="x => x.Id" Title="@viewModel.GetLanguage("Id")" />
+            <PropertyColumn Property="x => x.Name" Title="@viewModel.GetLanguage("Name")" />
+            <PropertyColumn Property="x => x.Prices.Select(x => x.Amount).DefaultIfEmpty(0).FirstOrDefault()" Title="@viewModel.GetLanguage("Amount")" />
+            @* <PropertyColumn Property="x => x.Product.Name" Title="Product Name" /> *@
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="(arg) => OnEdit(context.Item)" />
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="(arg) => ShowDeleteDialog(context.Item)" />
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="OrderContract" />
+        </PagerContent>
+    </MudDataGrid>
+    <MudDialog Class="@DialogClass" @bind-IsVisible="IsShowEditDialog" Options="DialogOptions">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Edit Order
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <AddOrUpdateOrder @ref="addOrUpdateOrderView" />
+        </DialogContent>
+    </MudDialog>
+    <MudDialog Class="@DialogClass" @ref="deleteDialog" @bind-IsVisible="IsShowDeleteDialog">
+        <TitleContent>
+            <MudText>
+                Delete Order
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            Do you really want to delete these records? This process cannot be undone.
+        </DialogContent>
+        <DialogActions>
+            @if (!viewModel.IsBusy)
             {
-                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                <MudText Class="ms-2">Processing</MudText>
+                <MudButton OnClick="() => deleteDialog.Close()">Cancel</MudButton>
             }
-            else
-            {
-                <MudText>Search</MudText>
-            }
-        </MudButton>
-    </ToolBarContent>
-    <Columns>
-        <SelectColumn T="OrderContract" />
-        <PropertyColumn Property="x => x.Id"/>
-        <PropertyColumn Property="x => x.Name" />
-        <PropertyColumn Property="x => x.Prices.Select(x => x.Amount).DefaultIfEmpty(0).FirstOrDefault()" />
-        @* <PropertyColumn Property="x => x.Product.Name" Title="Product Name" /> *@
-        <TemplateColumn CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="(arg) => OnEdit(context.Item)" />
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="(arg) => ShowDeleteDialog(context.Item)" />
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-    <PagerContent>
-        <MudDataGridPager T="OrderContract" />
-    </PagerContent>
-</MudDataGrid>
-<MudDialog Class="@DialogClass" @bind-IsVisible="IsShowEditDialog" Options="DialogOptions">
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" /> Edit Order
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <AddOrUpdateOrder @ref="addOrUpdateOrderView" />
-    </DialogContent>
-</MudDialog>
-<MudDialog Class="@DialogClass" @ref="deleteDialog" @bind-IsVisible="IsShowDeleteDialog">
-    <TitleContent>
-        <MudText>
-            Delete Order
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        Do you really want to delete these records? This process cannot be undone.
-    </DialogContent>
-    <DialogActions >
-        @if (!viewModel.IsBusy)
-        {
-            <MudButton OnClick="() => deleteDialog.Close()">Cancel</MudButton>
-        }
-        <MudButton Color="Color.Error" Variant="Variant.Filled" Disabled="viewModel.IsBusy" OnClick="()=>DoDelete()">
-            @if (viewModel.IsBusy)
-            {
-                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                <MudText Class="ms-2">Deleting</MudText>
-            }
-            else
-            {
-                <MudText>Delete</MudText>
-            }
-        </MudButton>
-    </DialogActions>
-</MudDialog>
+            <MudButton Color="Color.Error" Variant="Variant.Filled" Disabled="viewModel.IsBusy" OnClick="()=>DoDelete()">
+                @if (viewModel.IsBusy)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Deleting</MudText>
+                }
+                else
+                {
+                    <MudText>Delete</MudText>
+                }
+            </MudButton>
+        </DialogActions>
+    </MudDialog>
+</MudRTLProvider>
 <style>
     .dialog-background-class {
         backdrop-filter: blur(10px);
