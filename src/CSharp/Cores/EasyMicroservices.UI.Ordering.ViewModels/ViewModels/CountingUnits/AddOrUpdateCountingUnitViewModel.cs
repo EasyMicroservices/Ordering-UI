@@ -62,20 +62,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.CountingUnits
             }
         }
 
-
-        CountingUnitType _CountingUnitType = CountingUnitType.Number;
-        public CountingUnitType CountingUnitType
-        {
-            get
-            {
-                return _CountingUnitType;
-            }
-            set
-            {
-                _CountingUnitType = value;
-            }
-        }
-
         public async Task Save()
         {
             if (UpdateCountingUnitContract is not null)
@@ -136,7 +122,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.CountingUnits
             Name = "";
             PriceAmount = 0;
             UpdateCountingUnitContract = default;
-            CountingUnitType = CountingUnitType.Number;
         }
     }
 }

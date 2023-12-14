@@ -18,8 +18,8 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.CountingUnits
             SearchCommand.Execute(null);
         }
 
-        public ICommandAsync SearchCommand { get; set; }
-        public ICommandAsync DeleteCommand { get; set; }
+        public IAsyncCommand SearchCommand { get; set; }
+        public IAsyncCommand DeleteCommand { get; set; }
 
         public Action<CountingUnitContract> OnDelete { get; set; }
         readonly CountingUnitClient _countingUnitClient;

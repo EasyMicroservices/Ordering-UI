@@ -37,6 +37,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
                 {
                     Name = value.Name;
                     PriceAmount = value.Prices.Select(x => x.Amount).DefaultIfEmpty(0).FirstOrDefault();
+                    ExternalServiceIdentifier = value.ExternalServiceIdentifier;
                     SelectedCountingUnitId = value.CountingUnitId.GetValueOrDefault();
                 }
                 _UpdateProductContract = value;
@@ -63,6 +64,17 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             {
                 _PriceAmount = value;
                 OnPropertyChanged(nameof(PriceAmount));
+            }
+        }
+
+        string _ExternalServiceIdentifier;
+        public string ExternalServiceIdentifier
+        {
+            get => _ExternalServiceIdentifier;
+            set
+            {
+                _ExternalServiceIdentifier = value;
+                OnPropertyChanged(nameof(ExternalServiceIdentifier));
             }
         }
 
@@ -105,7 +117,8 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             {
                 Prices = GetPrices(),
                 Names = GetNames(),
-                CountingUnitId = SelectedCountingUnitId
+                CountingUnitId = SelectedCountingUnitId,
+                ExternalServiceIdentifier = ExternalServiceIdentifier
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
@@ -127,7 +140,8 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
                 Id = UpdateProductContract.Id,
                 Prices = GetPrices(),
                 Names = GetNames(),
-                CountingUnitId = SelectedCountingUnitId
+                CountingUnitId = SelectedCountingUnitId,
+                ExternalServiceIdentifier = ExternalServiceIdentifier
             }).AsCheckedResult(x => x.Result);
             Clear();
         }
@@ -182,6 +196,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             AmountType = AmountType.Percent;
             UpdateProductContract = default;
             CountingUnits = null;
+            ExternalServiceIdentifier = default;
         }
     }
 }

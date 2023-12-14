@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyMicroservices.OrderingMicroservice.Clients" Version="0.0.0.7" />
-    <PackageReference Include="EasyMicroservices.UI.Cores.Mvvm" Version="0.0.0.7" />
+    <PackageReference Include="EasyMicroservices.OrderingMicroservice.Clients" Version="0.0.0.8" />
+    <PackageReference Include="EasyMicroservices.UI.Cores.Mvvm" Version="0.0.0.9" />
   </ItemGroup>
 
 </Project>
