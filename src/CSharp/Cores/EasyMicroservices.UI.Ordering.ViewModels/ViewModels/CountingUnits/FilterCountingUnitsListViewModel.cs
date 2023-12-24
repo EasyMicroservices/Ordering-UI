@@ -47,7 +47,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.CountingUnits
                 IsDeleted = false,
                 Index = Index,
                 Length = Length,
-                SortColumnNames = SortColumnNames
             }).AsCheckedResult(x => (x.Result, x.TotalCount));
 
             CountingUnits.Clear();
@@ -67,16 +66,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.CountingUnits
             }).AsCheckedResult(x => x);
             CountingUnits.Remove(contract);
             OnDelete?.Invoke(contract);
-        }
-
-        public override Task OnError(Exception exception)
-        {
-            return base.OnError(exception);
-        }
-
-        public override Task DisplayFetchError(ServiceContracts.ErrorContract errorContract)
-        {
-            return base.DisplayFetchError(errorContract);
         }
     }
 }

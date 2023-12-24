@@ -123,16 +123,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
             Clear();
         }
 
-        public override Task OnError(Exception exception)
-        {
-            return base.OnError(exception);
-        }
-
-        public override Task DisplayFetchError(ServiceContracts.ErrorContract errorContract)
-        {
-            return base.DisplayFetchError(errorContract);
-        }
-
         public async Task UpdateProduct()
         {
             await _productClient.UpdateChangedValuesOnlyAsync(new UpdateProductRequestContract()
@@ -184,7 +174,7 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Products
         {
             var items = await _countingUnitClient.GetAllByLanguageAsync(new GetByLanguageRequestContract()
             {
-                Language = "fa-IR"
+                LanguageShortName = "fa-IR"
             }).AsCheckedResult(x => x.Result);
             CountingUnits = items;
         }
