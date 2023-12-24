@@ -61,15 +61,5 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.Orders
             Orders.Remove(contract);
             OnDelete?.Invoke(contract);
         }
-
-        public override Task OnError(Exception exception)
-        {
-            return base.OnError(exception);
-        }
-
-        public override Task DisplayFetchError(ServiceContracts.ErrorContract errorContract)
-        {
-            return base.DisplayFetchError(errorContract);
-        }
     }
 }

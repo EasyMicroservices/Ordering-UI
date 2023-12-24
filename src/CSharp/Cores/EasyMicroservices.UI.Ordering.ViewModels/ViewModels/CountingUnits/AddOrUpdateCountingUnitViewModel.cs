@@ -80,16 +80,6 @@ namespace EasyMicroservices.UI.Ordering.ViewModels.CountingUnits
             Clear();
         }
 
-        public override Task OnError(Exception exception)
-        {
-            return base.OnError(exception);
-        }
-
-        public override Task DisplayFetchError(ServiceContracts.ErrorContract errorContract)
-        {
-            return base.DisplayFetchError(errorContract);
-        }
-
         public async Task UpdateCountingUnit()
         {
             await _countingUnitClient.UpdateChangedValuesOnlyAsync(new UpdateCountingUnitRequestContract()
