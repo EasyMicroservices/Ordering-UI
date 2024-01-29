@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="EasyMicroservices.OrderingMicroservice.Clients" Version="0.0.0.10" />
-    <PackageReference Include="EasyMicroservices.UI.Cores.Mvvm" Version="0.0.0.13" />
+    <PackageReference Include="EasyMicroservices.UI.Cores.Mvvm" Version="0.0.0.23" />
   </ItemGroup>
 
 </Project>

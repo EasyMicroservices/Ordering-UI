@@ -15,29 +15,29 @@
         <ToolBarContent>
             <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="5">
                 <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="(arg) => ShowAddDialog()" />
-                <MudText Typo="Typo.h6" mar>@viewModel.GetLanguage("Ordering_CountingUnit_Title")</MudText>
+                <MudText Typo="Typo.h6" mar>@viewModel.GetInnerTranslatedByKey("Ordering_CountingUnit_Title")</MudText>
             </MudStack>
 
             <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="@viewModel.GetLanguage("Search")" Adornment="Adornment.Start" Immediate="true"
+            <MudTextField @bind-Value="_searchString" Placeholder="@viewModel.GetInnerTranslatedByKey("Search")" Adornment="Adornment.Start" Immediate="true"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Primary" Disabled="viewModel.IsBusy" OnClick="(arg) => viewModel.SearchCommand.Execute(null)">
                 @if (viewModel.IsBusy)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">@viewModel.GetLanguage("Processing")</MudText>
+                    <MudText Class="ms-2">@viewModel.GetInnerTranslatedByKey("Processing")</MudText>
                 }
                 else
                 {
-                    <MudText>@viewModel.GetLanguage("Search")</MudText>
+                    <MudText>@viewModel.GetInnerTranslatedByKey("Search")</MudText>
                 }
             </MudButton>
         </ToolBarContent>
         <Columns>
             <SelectColumn T="CountingUnitContract" />
-            <PropertyColumn Property="x => x.Id" Title="@viewModel.GetLanguage("Id")" />
-            <PropertyColumn Property="x => x.Name" Title="@viewModel.GetLanguage("Name")" />
-            <TemplateColumn CellClass="d-flex justify-end" Title="@viewModel.GetLanguage("Actions")">
+            <PropertyColumn Property="x => x.Id" Title="@viewModel.GetInnerTranslatedByKey("Id")" />
+            <PropertyColumn Property="x => x.Name" Title="@viewModel.GetInnerTranslatedByKey("Name")" />
+            <TemplateColumn CellClass="d-flex justify-end" Title="@viewModel.GetInnerTranslatedByKey("Actions")">
                 <CellTemplate>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="(arg) => ShowUpdateDialog(context.Item)" />
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="(arg) => ShowDeleteDialog(context.Item)" />
@@ -61,26 +61,26 @@
     <MudDialog Class="@DialogClass" @ref="deleteDialog" @bind-IsVisible="IsShowDeleteDialog">
         <TitleContent>
             <MudText>
-                @viewModel.GetLanguage("Ordering_DeleteCountingUnit_Title")
+                @viewModel.GetInnerTranslatedByKey("Ordering_DeleteCountingUnit_Title")
             </MudText>
         </TitleContent>
         <DialogContent>
-            @viewModel.GetLanguage("DeleteQuestion_Content")
+            @viewModel.GetInnerTranslatedByKey("DeleteQuestion_Content")
         </DialogContent>
         <DialogActions>
             @if (!viewModel.IsBusy)
             {
-                <MudButton OnClick="() => deleteDialog.Close()">@viewModel.GetLanguage("Cancel")</MudButton>
+                <MudButton OnClick="() => deleteDialog.Close()">@viewModel.GetInnerTranslatedByKey("Cancel")</MudButton>
             }
             <MudButton Color="Color.Error" Variant="Variant.Filled" Disabled="viewModel.IsBusy" OnClick="()=>DoDelete()">
                 @if (viewModel.IsBusy)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">@viewModel.GetLanguage("Deleting")</MudText>
+                    <MudText Class="ms-2">@viewModel.GetInnerTranslatedByKey("Deleting")</MudText>
                 }
                 else
                 {
-                    <MudText>@viewModel.GetLanguage("Delete")</MudText>
+                    <MudText>@viewModel.GetInnerTranslatedByKey("Delete")</MudText>
                 }
             </MudButton>
         </DialogActions>
@@ -138,16 +138,16 @@
 
     void ShowUpdateDialog(CountingUnitContract countingUnitContract)
     {
-        _AddOrUpdateTitle = @viewModel.GetLanguage("Ordering_UpdateCountingUnit_Title");
-        _AddOrUpdatedMessage = @viewModel.GetLanguage("Ordering_UpdateCountingUnit_Message");
+        _AddOrUpdateTitle = @viewModel.GetInnerTranslatedByKey("Ordering_UpdateCountingUnit_Title");
+        _AddOrUpdatedMessage = @viewModel.GetInnerTranslatedByKey("Ordering_UpdateCountingUnit_Message");
         addOrUpdateCountingUnitView.ViewModel.UpdateCountingUnitContract = countingUnitContract;
         ShowAddOrUpdateDialog();
     }
 
     void ShowAddDialog()
     {
-        _AddOrUpdateTitle = @viewModel.GetLanguage("Ordering_AddCountingUnit_Title");
-        _AddOrUpdatedMessage = @viewModel.GetLanguage("Ordering_AddCountingUnit_Message");
+        _AddOrUpdateTitle = @viewModel.GetInnerTranslatedByKey("Ordering_AddCountingUnit_Title");
+        _AddOrUpdatedMessage = @viewModel.GetInnerTranslatedByKey("Ordering_AddCountingUnit_Message");
         addOrUpdateCountingUnitView.ViewModel.Clear();
         ShowAddOrUpdateDialog();
     }
